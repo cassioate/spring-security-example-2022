@@ -8,14 +8,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 import java.util.Arrays;
 
@@ -52,40 +46,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().httpBasic();
 
 //        http.exceptionHandling().accessDeniedPage("/login");
-    };
+    }
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(securityUserDetailsService);
+        auth.userDetailsService(securityUserDetailsService).passwordEncoder(passwordEncoder());
     }
 
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        InMemoryUserDetailsManager userDetailsService = new InMemoryUserDetailsManager();
-//        UserDetails user = User.withUsername("admin").password("admin").authorities("admin").build();
-//        UserDetails user2 = User.withUsername("user").password("user").authorities("read").build();
-//        userDetailsService.createUser(user);
-//        userDetailsService.createUser(user2);
-//        auth.userDetailsService(userDetailsService);
-//    };
-
-    // FORMA CORRETA
-//    @Autowired
-//    private AutenticacaoService autenticacaoService;
-    //
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(autenticacaoService).passwordEncoder(new BCryptPasswordEncoder());
-//    }
-
-    //Ao escrever esse BEAN, eu faço com que o spring security entenda que o tipo PasswordEncoder default será o definido no metodo abaixo,
-    //Sendo utilizado por baixo dos panos no lugar do ".and().passwordEncoder(NoOpPasswordEncoder.getInstance());" dentro do metodo configure( AuthenticationManagerBuilder auth)
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder(12);
     }
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder(12);
-//    }
 }
