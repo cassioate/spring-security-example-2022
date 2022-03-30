@@ -1,16 +1,29 @@
 package com.tessaro.springsecurity.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import com.tessaro.springsecurity.domain.Cards;
+import com.tessaro.springsecurity.domain.Customer;
+import com.tessaro.springsecurity.repository.CardsRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("/myCards")
-public class CardsController {
+import java.util.List;
 
-    @GetMapping
-    public String contact() {
-        return "cards!";
-    }
+@RestController
+public class CardsController {
+	
+	@Autowired
+	private CardsRepository cardsRepository;
+	
+	@PostMapping("/myCards")
+	public List<Cards> getCardDetails(@RequestBody Customer customer) {
+		List<Cards> cards = cardsRepository.findByCustomerId(customer.getId());
+		if (cards != null ) {
+			return cards;
+		}else {
+			return null;
+		}
+	}
 
 }

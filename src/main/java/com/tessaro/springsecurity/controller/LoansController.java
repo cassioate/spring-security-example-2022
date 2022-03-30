@@ -1,16 +1,29 @@
 package com.tessaro.springsecurity.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import com.tessaro.springsecurity.domain.Customer;
+import com.tessaro.springsecurity.domain.Loans;
+import com.tessaro.springsecurity.repository.LoanRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("/myLoans")
-public class LoansController {
+import java.util.List;
 
-    @GetMapping
-    public String contact() {
-        return "Loans!";
-    }
+@RestController
+public class LoansController {
+	
+	@Autowired
+	private LoanRepository loanRepository;
+	
+	@PostMapping("/myLoans")
+	public List<Loans> getLoanDetails(@RequestBody Customer customer) {
+		List<Loans> loans = loanRepository.findByCustomerIdOrderByStartDtDesc(customer.getId());
+		if (loans != null ) {
+			return loans;
+		}else {
+			return null;
+		}
+	}
 
 }

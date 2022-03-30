@@ -10,8 +10,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -28,7 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String [] PUBLIC_MATCHERS_GET = {
             "/notices",
-            "/contact"
+            "/contact",
     };
 
     @Override
@@ -38,7 +41,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             http.headers().frameOptions().disable();
         }
 
-        http.authorizeRequests()
+        http.cors().configurationSource(request -> {
+             CorsConfiguration config = new CorsConfiguration();
+             config.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
+             config.setAllowedMethods(Collections.singletonList("*"));
+             config.setAllowCredentials(true);
+             config.setAllowedHeaders(Collections.singletonList("*"));
+             config.setMaxAge(3600L);
+             return config;
+        }).and().csrf().disable()
+                .authorizeRequests()
                 .antMatchers(PUBLIC_MATCHERS).permitAll()
                 .antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
                 .anyRequest().authenticated()
@@ -47,6 +59,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 //        http.exceptionHandling().accessDeniedPage("/login");
     }
+
+
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {

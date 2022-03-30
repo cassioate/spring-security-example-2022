@@ -1,23 +1,32 @@
+INSERT INTO CUSTOMER VALUES (1, 'hoje' ,'cassioate@gmail.com', '(83)9 9918-9488',  'Cassio', '$2a$12$29JgF23wW5O3ErM5yev2ieiGyXsOOGuS31eD75zXAUEa7FQ9BDJf.', 'admin');
+INSERT INTO `accounts` (`customer_id`, `account_number`, `account_type`, `branch_address`, `create_dt`)
+ VALUES (1, 186576453434, 'Savings', '123 Main Street, New York', CURDATE());
 
-CREATE TABLE CUSTOMER (
-	ID VARCHAR(250) NOT NULL,
-	EMAIL VARCHAR(50) NOT NULL,
-	PASS VARCHAR(500) NOT NULL,
-	ROLE VARCHAR(50) NOT NULL,
-	constraint pk_ID primary key (ID)
-);
+ INSERT INTO `account_transactions` (`transaction_id`, `account_number`, `customer_id`, `transaction_dt`, `transaction_summary`, `transaction_type`,`transaction_amt`,
+ `closing_balance`, `create_dt`)  VALUES (UUID(), 186576453434, 1, CURDATE()-7, 'Coffee Shop', 'Withdrawal', 30,34500,CURDATE()-7);
 
-INSERT INTO CUSTOMER VALUES (1, 'cassio', '$2a$12$29JgF23wW5O3ErM5yev2ieiGyXsOOGuS31eD75zXAUEa7FQ9BDJf.', 'admin');
+ INSERT INTO `account_transactions` (`transaction_id`, `account_number`, `customer_id`, `transaction_dt`, `transaction_summary`, `transaction_type`,`transaction_amt`,
+ `closing_balance`, `create_dt`)  VALUES (UUID(), 186576453434, 1, CURDATE()-6, 'Uber', 'Withdrawal', 100,34400,CURDATE()-6);
 
---CREATE TABLE AUTHORITIES (
---	ID VARCHAR(250) NOT NULL,
---	USERNAME VARCHAR(50) NOT NULL,
---	AUTHORITY VARCHAR(50) NOT NULL,
---	constraint pk_ID2 primary key (ID)
---);
+ INSERT INTO `account_transactions` (`transaction_id`, `account_number`, `customer_id`, `transaction_dt`, `transaction_summary`, `transaction_type`,`transaction_amt`,
+ `closing_balance`, `create_dt`)  VALUES (UUID(), 186576453434, 1, CURDATE()-5, 'Self Deposit', 'Deposit', 500,34900,CURDATE()-5);
 
---INSERT INTO USERS VALUES ('NULL', 'happy', '12345', '1');
---INSERT INTO AUTHORITIES VALUES ('NULL', 'happy', 'WRITE');
+ INSERT INTO `account_transactions` (`transaction_id`, `account_number`, `customer_id`, `transaction_dt`, `transaction_summary`, `transaction_type`,`transaction_amt`,
+ `closing_balance`, `create_dt`)  VALUES (UUID(), 186576453434, 1, CURDATE()-4, 'Ebay', 'Withdrawal', 600,34300,CURDATE()-4);
 
---INSERT INTO USERS (ID,USERNAME,PASSWORD,ENABLE) VALUES ('NULL', 'happy', '12345', '1');
---INSERT INTO AUTHORITIES (ID,USERNAME,AUTHORITY) VALUES ('N', 'happy', 'write');
+ INSERT INTO `account_transactions` (`transaction_id`, `account_number`, `customer_id`, `transaction_dt`, `transaction_summary`, `transaction_type`,`transaction_amt`,
+ `closing_balance`, `create_dt`)  VALUES (UUID(), 186576453434, 1, CURDATE()-2, 'OnlineTransfer', 'Deposit', 700,35000,CURDATE()-2);
+
+ INSERT INTO `account_transactions` (`transaction_id`, `account_number`, `customer_id`, `transaction_dt`, `transaction_summary`, `transaction_type`,`transaction_amt`,
+ `closing_balance`, `create_dt`)  VALUES (UUID(), 186576453434, 1, CURDATE()-1, 'Amazon.com', 'Withdrawal', 100,34900,CURDATE()-1);
+
+
+
+
+INSERT INTO CARDS VALUES (1, 1, 20, NULL, NULL, NULL, 1, 25);
+
+
+INSERT INTO CARDS VALUES (21, 1, 22, NULL, NULL, NULL, 1, 26);
+
+
+INSERT INTO CARDS VALUES (31, 1, 223, NULL, NULL, NULL, 1, 27);
