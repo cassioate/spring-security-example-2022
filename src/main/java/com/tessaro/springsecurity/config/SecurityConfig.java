@@ -10,8 +10,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -30,8 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     };
 
     private static final String [] PUBLIC_MATCHERS_GET = {
-            "/notices",
-            "/contact",
+            "/notices"
     };
 
     @Override
@@ -39,6 +38,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         if (Arrays.asList(env.getActiveProfiles()).contains("test")) {
             http.csrf().disable();
             http.headers().frameOptions().disable();
+        } else {
+            http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
         }
 
         http.cors().configurationSource(request -> {
@@ -49,7 +50,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
              config.setAllowedHeaders(Collections.singletonList("*"));
              config.setMaxAge(3600L);
              return config;
-        }).and().csrf().disable()
+        }).and()
+//                .csrf().disable()
                 .authorizeRequests()
                 .antMatchers(PUBLIC_MATCHERS).permitAll()
                 .antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
