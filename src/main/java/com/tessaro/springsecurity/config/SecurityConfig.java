@@ -1,5 +1,8 @@
 package com.tessaro.springsecurity.config;
 
+import com.tessaro.springsecurity.config.filterJWT.JWTAuthenticationFilter;
+import com.tessaro.springsecurity.config.filterJWT.JWTAuthorizationFilter;
+import com.tessaro.springsecurity.config.filterJWT.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,11 +11,11 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.Arrays;
@@ -27,10 +30,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private Environment env;
 
     @Autowired
+    private JWTUtil jwtUtil;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Autowired
     private SecurityUserDetailsService securityUserDetailsService;
 
     private static final String [] PUBLIC_MATCHERS = {
-            "/h2-console/**"
+            "/h2-console/**",
+            "/login"
     };
 
     private static final String [] PUBLIC_MATCHERS_GET = {
@@ -40,23 +50,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         if (Arrays.asList(env.getActiveProfiles()).contains("test")) {
-            http.csrf().disable();
             http.headers().frameOptions().disable();
-        } else {
-            http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
         }
 
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.csrf().disable();
         http.cors().configurationSource(request -> {
             CorsConfiguration config = new CorsConfiguration();
             config.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
             config.setAllowedMethods(Collections.singletonList("*"));
             config.setAllowCredentials(true);
             config.setAllowedHeaders(Collections.singletonList("*"));
+            //Permite que o front veja o header Authorization
+            config.setExposedHeaders(Arrays.asList("Authorization"));
             config.setMaxAge(3600L);
             return config;
         }).and()
-
-                //Utilizando ROLE e também sem utilizar ROLE seria da forma abaixo
             .authorizeRequests()
                 .antMatchers(PUBLIC_MATCHERS).permitAll()
                 .antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
@@ -64,13 +73,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().formLogin()
                 .and().httpBasic();
 
-                //Utilizando Authority
-//          .authorizeRequests()
-//                .antMatchers(PUBLIC_MATCHERS).hasAuthority("USER")
-//                .antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
-//                .anyRequest().hasAuthority("ADMIN")
-//                .and().formLogin()
-//                .and().httpBasic();
+        http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
+        http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
     @Override

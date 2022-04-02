@@ -24,7 +24,6 @@ public class Customer {
     private String mobileNumber;
     @JsonIgnore
     private String pwd;
-//    private String role;
     @Column(name = "create_dt")
     private String createDt;
 
