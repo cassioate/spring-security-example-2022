@@ -32,8 +32,8 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public Authentication attemptAuthentication (HttpServletRequest req, HttpServletResponse res) throws AuthenticationException {
 
         try {
-            CredenciaisDTO creds = new ObjectMapper()
-                    .readValue(req.getInputStream(), CredenciaisDTO.class);
+            CredenciaisLogin creds = new ObjectMapper()
+                    .readValue(req.getInputStream(), CredenciaisLogin.class);
 
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken (creds.getEmail(),
                     creds.getPassword(), new ArrayList<>());
