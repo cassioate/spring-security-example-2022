@@ -1,4 +1,4 @@
-package com.tessaro.springsecurity.config;
+package com.tessaro.springsecurity.security.model;
 
 import com.tessaro.springsecurity.domain.Customer;
 import org.springframework.security.core.GrantedAuthority;
@@ -6,14 +6,14 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
-public class SecurityCustomerUserDetails implements UserDetails {
+public class SecurityUserDetailsImpl implements UserDetails {
 
+    // Classe que será utilizada como a entidade de LOGIN
     private final Customer customer;
 
-    public SecurityCustomerUserDetails(Customer customer) {
+    public SecurityUserDetailsImpl(Customer customer) {
         this.customer = customer;
     }
 

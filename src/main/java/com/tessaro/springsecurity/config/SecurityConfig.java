@@ -1,8 +1,9 @@
 package com.tessaro.springsecurity.config;
 
-import com.tessaro.springsecurity.config.filterJWT.JWTAuthenticationFilter;
-import com.tessaro.springsecurity.config.filterJWT.JWTAuthorizationFilter;
-import com.tessaro.springsecurity.config.filterJWT.JWTUtil;
+import com.tessaro.springsecurity.security.filterJWTv2.properties.JwtProperties;
+import com.tessaro.springsecurity.security.filterJWTv2.JwtTokenVerifier;
+import com.tessaro.springsecurity.security.filterJWTv2.JwtUsernameAndPasswordAuthenticationFilter;
+import com.tessaro.springsecurity.security.service.SecurityUserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,13 +31,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private Environment env;
 
     @Autowired
-    private JWTUtil jwtUtil;
+    private JwtProperties jwtProperties;
 
     @Autowired
     private UserDetailsService userDetailsService;
 
     @Autowired
-    private SecurityUserDetailsService securityUserDetailsService;
+    private SecurityUserDetailsServiceImpl securityUserDetailsService;
 
     private static final String [] PUBLIC_MATCHERS = {
             "/h2-console/**",
@@ -71,8 +72,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().httpBasic();
 
         http.csrf().disable();
-        http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
-        http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
+        http.addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtProperties));
+        http.addFilterAfter(new JwtTokenVerifier(securityUserDetailsService, jwtProperties), JwtUsernameAndPasswordAuthenticationFilter.class);
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 

@@ -1,4 +1,4 @@
-package com.tessaro.springsecurity.config.filterJWT;
+package com.tessaro.springsecurity.security.filterJWTv2.credentials;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,6 +11,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Getter
 @Setter
+// CLasse que será o objeto base na hoar de fazer login via path /login
 public class CredenciaisLogin implements Serializable {
     private static final long serialVersionUID = 1L;
 

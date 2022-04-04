@@ -1,5 +1,6 @@
-package com.tessaro.springsecurity.config;
+package com.tessaro.springsecurity.security.service;
 
+import com.tessaro.springsecurity.security.model.SecurityUserDetailsImpl;
 import com.tessaro.springsecurity.domain.Customer;
 import com.tessaro.springsecurity.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class SecurityUserDetailsService implements UserDetailsService {
+public class SecurityUserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -22,6 +23,6 @@ public class SecurityUserDetailsService implements UserDetailsService {
         if (customer.isEmpty()) {
             throw new UsernameNotFoundException("Not found: " + username);
         }
-        return new SecurityCustomerUserDetails(customer.get(0));
+        return new SecurityUserDetailsImpl(customer.get(0));
     }
 }

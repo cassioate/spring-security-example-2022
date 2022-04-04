@@ -1,4 +1,4 @@
-package com.tessaro.springsecurity.config.filterJWT;
+package com.tessaro.springsecurity.security.filterJWTv2.failure_handler;
 
 import java.io.IOException;
 import java.util.Date;
@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
+// Irá lançar a mensagem abaixo quadno a autenticação falhar, para tal ele
+// precisa ser setado via setAuthenticationFailureHandler(new JWTAuthenticationFailureHandler())
+// dentro do construtor na classe onde irá ser feita a autenticação(JwtusernameAndPasswordAuthenticated.class)
 public class JWTAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
     @Override
