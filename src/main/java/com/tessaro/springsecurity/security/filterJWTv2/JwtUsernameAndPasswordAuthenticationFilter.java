@@ -12,6 +12,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -77,4 +78,15 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 
         res.addHeader("Authorization", "Bearer " + token);
     }
+
+//    @Override
+    // Após autenticação ser bem sucedida será gerado o token JWT via codigo abaixo.
+//    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+//        SecurityContextHolder.clearContext();
+//        this.logger.trace("Failed to process authentication request", failed);
+//        this.logger.trace("Cleared SecurityContextHolder");
+//        this.logger.trace("Handling authentication failure");
+//        this.rememberMeServices.loginFail(request, response);
+//        this.failureHandler.onAuthenticationFailure(request, response, failed);
+//    }
 }
